@@ -1,0 +1,21 @@
+# Python
+myenv/
+venv/
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# 模型权重（不上传大模型）
+*.bin
+*.safetensors
+*.pth
+./functiongemma-270m-it/
+lora-trained/
+
+# 日志
+*.log
+debug_log.txt
+
+# 系统
+.DS_Store

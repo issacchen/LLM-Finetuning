@@ -1,0 +1,7 @@
+accelerate
+datasets
+gradio
+matplotlib
+oauth
+transformers
+trl

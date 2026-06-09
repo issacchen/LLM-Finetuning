@@ -1,0 +1,34 @@
+import os
+# ==========最顶部：先打补丁，在import gradio之前执行==========
+# 禁用HF Hub联网、离线模式
+os.environ["HF_HUB_OFFLINE"] = "1"
+os.environ["HF_TOKEN"] = ""
+os.environ["GRADIO_OAUTH_DISABLE"] = "1"
+
+# 猴子补丁：直接替换attach_oauth、_get_mocked_oauth_info，屏蔽OAuth校验逻辑
+import gradio.oauth as goauth
+
+# 覆写：空函数，不再挂载oauth路由
+def no_attach_oauth(app):
+    return
+
+# 覆写：直接返回空模拟用户，跳过HF登录校验
+def mock_oauth_info():
+    return {"name": "local_user", "id": "000"}
+
+goauth.attach_oauth = no_attach_oauth
+goauth._get_mocked_oauth_info = mock_oauth_info
+# ==========================================================
+
+# 原有代码不动
+from ui import build_interface
+
+if __name__ == "__main__":
+    demo = build_interface()
+    print("Starting Gradio App with Multi-User Support...")
+    demo.queue()
+    # 删掉无用的 oauth_config=None，老版本不支持
+    demo.launch(
+        server_name="127.0.0.1",
+        share=False
+    )

@@ -1,0 +1,18 @@
+from ui import build_interface
+
+import os
+# 全局关闭Gradio HF OAuth鉴权
+os.environ["GRADIO_OAUTH_DISABLE"] = "1"
+os.environ["HF_TOKEN"] = ""
+
+if __name__ == "__main__":
+    # Build and Launch UI
+    # Note: Engine creation is now handled per-session inside build_interface
+    demo = build_interface()
+    print("Starting Gradio App with Multi-User Support...")
+    demo.queue() # Enable queueing for concurrent request handling
+    #demo.launch()
+    demo.launch(
+        server_name="127.0.0.1",
+        oauth_config=None,
+    )
